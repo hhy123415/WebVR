@@ -1,26 +1,22 @@
-import "./css/App.css";
+import NavBar from "./NavBar";
+import Test from "./test";
+import Home from "./Home";
+import About from "./About";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 
 function App() {
   return (
     <>
-      <nav>
+      <BrowserRouter>
         <div>
-          <ul className="nav-links">
-            <a href="/">
-              首页
-            </a>
-            <a href="/">
-              关于
-            </a>
-          </ul>
+          <NavBar />
         </div>
-      </nav>
-      <div className="App">
-        <h1>This is React App.</h1>
-      </div>
-      <div className="button_test">
-        <button>this is button</button>
-      </div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/test" element={<Test />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

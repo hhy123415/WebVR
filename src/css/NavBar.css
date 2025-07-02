@@ -1,0 +1,29 @@
+nav
+{
+  display: flex;
+  background-color: #bdc3a2;
+}
+
+.nav-links
+{
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a{
+  margin-top: 20px;
+  margin-right: 40px;
+  padding: 0;
+  font-size: 20px;
+}
+
+.nav-links a:hover
+{
+  color:red;
+}
+
+.nav-logo
+{
+  width: 300px;
+  height: 100px;
+}
