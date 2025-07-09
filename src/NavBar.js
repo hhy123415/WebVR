@@ -12,8 +12,9 @@ function NavBar() {
         <div>
           <ul className="nav-links">
             <Link to="/">首页</Link>
-            <Link to="/test">场景测试</Link>
+            <Link to="/test_scene">场景测试</Link>
             <Link to="/about">关于</Link>
+            <Link to="/quiz">自我测验</Link>
           </ul>
         </div>
       </nav>
