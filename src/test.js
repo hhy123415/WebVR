@@ -4,17 +4,21 @@ import { Suspense, useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "@react-three/drei";
 
-// 创建一个长方体模型
+/**
+ * 创建立方体模型
+ * @param {*} param0:{是否旋转,旋转速度}
+ * @returns 网格模型
+ */
 function Box({ isRotating, rotationSpeed }) {
   const meshRef = useRef();
-  
+
   // 旋转动画
   useFrame(() => {
     if (meshRef.current && isRotating) {
       meshRef.current.rotation.y += rotationSpeed;
     }
   });
-  
+
   return (
     <mesh ref={meshRef} position={[-50, 0, 0]} receiveShadow castShadow>
       <boxGeometry args={[150, 80, 100]} />
@@ -23,7 +27,10 @@ function Box({ isRotating, rotationSpeed }) {
   );
 }
 
-// 相机自动更新组件
+/**
+ * 相机自动更新函数
+ * @returns null
+ */
 function CameraUpdater() {
   const { camera, size } = useThree();
 
@@ -36,7 +43,12 @@ function CameraUpdater() {
 }
 
 // GUI控制面板组件
-function ControlPanel({ isRotating, setIsRotating, rotationSpeed, setRotationSpeed }) {
+function ControlPanel({
+  isRotating,
+  setIsRotating,
+  rotationSpeed,
+  setRotationSpeed,
+}) {
   return (
     <div className="control-panel">
       <h2>模型旋转控制</h2>
@@ -44,8 +56,8 @@ function ControlPanel({ isRotating, setIsRotating, rotationSpeed, setRotationSpe
         <div className="toggle-switch">
           <span>旋转状态: </span>
           <label className="switch">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={isRotating}
               onChange={() => setIsRotating(!isRotating)}
             />
@@ -53,30 +65,17 @@ function ControlPanel({ isRotating, setIsRotating, rotationSpeed, setRotationSpe
           </label>
           <span className="status">{isRotating ? "启用" : "禁用"}</span>
         </div>
-        
+
         <div className="slider-control">
           <label>旋转速度: {rotationSpeed.toFixed(3)}</label>
-          <input 
-            type="range" 
+          <input
+            type="range"
             min="0.001"
             max="0.05"
             step="0.001"
             value={rotationSpeed}
             onChange={(e) => setRotationSpeed(parseFloat(e.target.value))}
           />
-        </div>
-      </div>
-      
-      <div className="stats">
-        <div className="stat-item">
-          <span>当前状态:</span>
-          <span className={isRotating ? "active" : "inactive"}>
-            {isRotating ? "旋转中" : "已停止"}
-          </span>
-        </div>
-        <div className="stat-item">
-          <span>速度值:</span>
-          <span>{rotationSpeed.toFixed(3)}</span>
         </div>
       </div>
     </div>
@@ -124,15 +123,15 @@ function Test() {
   return (
     <div className="scene-container">
       <h1>3D模型旋转控制演示</h1>
-      
+
       <div className="content-wrapper">
-        <ControlPanel 
+        <ControlPanel
           isRotating={isRotating}
           setIsRotating={setIsRotating}
           rotationSpeed={rotationSpeed}
           setRotationSpeed={setRotationSpeed}
         />
-        
+
         <div className="canvas-container">
           <Canvas
             camera={camera}
@@ -154,7 +153,7 @@ function Test() {
               <Box isRotating={isRotating} rotationSpeed={rotationSpeed} />
               {/* 轨道控制 */}
               <OrbitControls
-                target={[0,0,0]}
+                target={[0, 0, 0]}
                 enablePan={true}
                 enableZoom={true}
                 enableRotate={true}
@@ -163,18 +162,6 @@ function Test() {
             </Suspense>
           </Canvas>
         </div>
-      </div>
-      
-      <div className="instructions">
-        <h3>使用说明:</h3>
-        <ul>
-          <li>使用右上角的开关控制模型旋转状态</li>
-          <li>通过滑块调整模型的旋转速度</li>
-          <li>在3D场景中，您可以拖拽、缩放和旋转视角</li>
-          <li>当前旋转状态: <span className={isRotating ? "active" : "inactive"}>
-            {isRotating ? "旋转中" : "已停止"}
-          </span></li>
-        </ul>
       </div>
     </div>
   );
