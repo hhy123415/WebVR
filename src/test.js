@@ -1,16 +1,24 @@
 import "./css/test.css";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import metal from "./picture/metal.jpg";
+import woodFloor from "./picture/woodFloor.jpg";
+import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import { Suspense, useRef, useEffect, useState } from "react";
 import * as THREE from "three";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Html } from "@react-three/drei";
 
 /**
  * 创建立方体模型
- * @param {*} param0:{是否旋转,旋转速度}
+ * @param {*} isRotating:是否旋转
+ * @param {*} rotationSpeed:旋转速度
+ * @param {*} x:x轴坐标
+ * @param {*} y:y轴坐标
+ * @param {*} z:z轴坐标
  * @returns 网格模型
  */
-function Box({ isRotating, rotationSpeed }) {
+function Box({ isRotating, rotationSpeed, x, y, z }) {
   const meshRef = useRef();
+  // 纹理
+  const colorMap = useLoader(THREE.TextureLoader, metal);
 
   // 旋转动画
   useFrame(() => {
@@ -20,9 +28,24 @@ function Box({ isRotating, rotationSpeed }) {
   });
 
   return (
-    <mesh ref={meshRef} position={[-50, 0, 0]} receiveShadow castShadow>
+    <mesh ref={meshRef} position={[x, y, z]} receiveShadow castShadow>
       <boxGeometry args={[150, 80, 100]} />
-      <meshStandardMaterial color={0xff0000} />
+      <meshStandardMaterial map={colorMap} side={THREE.DoubleSide} />
+    </mesh>
+  );
+}
+
+function Plane() {
+  const colorMap = useLoader(THREE.TextureLoader, woodFloor);
+  //纹理重复阵列
+  colorMap.wrapS = THREE.RepeatWrapping;
+  colorMap.wrapT = THREE.RepeatWrapping;
+  colorMap.repeat.set(3,3);
+  
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -50, 0]}>
+      <planeGeometry args={[1000, 1000]} />
+      <meshStandardMaterial map={colorMap} />
     </mesh>
   );
 }
@@ -112,13 +135,21 @@ function Test() {
       75,
       windowSize.width / windowSize.height,
       0.1,
-      1000
+      3000
     )
   ).current;
 
   useEffect(() => {
     camera.position.set(292, 233, 185);
   }, [camera]);
+
+  const boxPositions = Array(5)
+    .fill()
+    .map((_, index) => ({
+      x: index * 150, // x坐标每次增加150
+      y: 0,
+      z: 0,
+    }));
 
   return (
     <div className="scene-container">
@@ -149,8 +180,19 @@ function Test() {
                 decay={0}
                 castShadow
               />
-              {/* 网格模型 */}
-              <Box isRotating={isRotating} rotationSpeed={rotationSpeed} />
+              {/* 循环创建多个立方体 */}
+              {boxPositions.map((position, index) => (
+                <Box
+                  key={index} // 必须提供唯一key
+                  isRotating={isRotating}
+                  rotationSpeed={rotationSpeed}
+                  {...position} // 展开位置属性 (x, y, z)
+                />
+              ))}
+
+              {/* 创建地板 */}
+              <Plane/>
+
               {/* 轨道控制 */}
               <OrbitControls
                 target={[0, 0, 0]}
@@ -168,7 +210,21 @@ function Test() {
 }
 
 function Loading() {
-  return <h2>🌀 加载中...</h2>;
+  return (
+    <Html
+      center
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "200px",
+      }}
+      className="custom-loading"
+    >
+      <div>🌀</div>
+      <h2>加载中...</h2>
+    </Html>
+  );
 }
 
 export default Test;
