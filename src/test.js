@@ -1,54 +1,10 @@
 import "./css/test.css";
-import metal from "./picture/metal.jpg";
-import woodFloor from "./picture/woodFloor.jpg";
-import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
+import { Box, Plane, GltfGenerator } from "./utils/geometry";
+import { ControlPanel } from "./utils/ui";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls, Html } from "@react-three/drei";
-
-/**
- * 创建立方体模型
- * @param {*} isRotating:是否旋转
- * @param {*} rotationSpeed:旋转速度
- * @param {*} x:x轴坐标
- * @param {*} y:y轴坐标
- * @param {*} z:z轴坐标
- * @returns 网格模型
- */
-function Box({ isRotating, rotationSpeed, x, y, z }) {
-  const meshRef = useRef();
-  // 纹理
-  const colorMap = useLoader(THREE.TextureLoader, metal);
-
-  // 旋转动画
-  useFrame(() => {
-    if (meshRef.current && isRotating) {
-      meshRef.current.rotation.y += rotationSpeed;
-    }
-  });
-
-  return (
-    <mesh ref={meshRef} position={[x, y, z]} receiveShadow castShadow>
-      <boxGeometry args={[150, 80, 100]} />
-      <meshStandardMaterial map={colorMap} side={THREE.DoubleSide} />
-    </mesh>
-  );
-}
-
-function Plane() {
-  const colorMap = useLoader(THREE.TextureLoader, woodFloor);
-  //纹理重复阵列
-  colorMap.wrapS = THREE.RepeatWrapping;
-  colorMap.wrapT = THREE.RepeatWrapping;
-  colorMap.repeat.set(3,3);
-  
-  return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -50, 0]}>
-      <planeGeometry args={[1000, 1000]} />
-      <meshStandardMaterial map={colorMap} />
-    </mesh>
-  );
-}
 
 /**
  * 相机自动更新函数
@@ -63,46 +19,6 @@ function CameraUpdater() {
   }, [size, camera]);
 
   return null;
-}
-
-// GUI控制面板组件
-function ControlPanel({
-  isRotating,
-  setIsRotating,
-  rotationSpeed,
-  setRotationSpeed,
-}) {
-  return (
-    <div className="control-panel">
-      <h2>模型旋转控制</h2>
-      <div className="control-group">
-        <div className="toggle-switch">
-          <span>旋转状态: </span>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={isRotating}
-              onChange={() => setIsRotating(!isRotating)}
-            />
-            <span className="slider"></span>
-          </label>
-          <span className="status">{isRotating ? "启用" : "禁用"}</span>
-        </div>
-
-        <div className="slider-control">
-          <label>旋转速度: {rotationSpeed.toFixed(3)}</label>
-          <input
-            type="range"
-            min="0.001"
-            max="0.05"
-            step="0.001"
-            value={rotationSpeed}
-            onChange={(e) => setRotationSpeed(parseFloat(e.target.value))}
-          />
-        </div>
-      </div>
-    </div>
-  );
 }
 
 function Test() {
@@ -143,13 +59,13 @@ function Test() {
     camera.position.set(292, 233, 185);
   }, [camera]);
 
-  const boxPositions = Array(5)
-    .fill()
-    .map((_, index) => ({
-      x: index * 150, // x坐标每次增加150
-      y: 0,
-      z: 0,
-    }));
+  // const boxPositions = Array(5)
+  //   .fill()
+  //   .map((_, index) => ({
+  //     x: index * 150, // x坐标每次增加150
+  //     y: 0,
+  //     z: 0,
+  //   }));
 
   return (
     <div className="scene-container">
@@ -172,26 +88,34 @@ function Test() {
             <Suspense fallback={<Loading />}>
               <CameraUpdater />
               {/* 光照 */}
-              <ambientLight intensity={0.3} />
-              <directionalLight
+              
+              <ambientLight intensity={1} />
+              {/* <directionalLight
                 color={"white"}
                 intensity={1}
-                position={[200, 150, 80]}
+                position={[0, 0, 80]}
                 decay={0}
                 castShadow
-              />
+              /> */}
+
               {/* 循环创建多个立方体 */}
-              {boxPositions.map((position, index) => (
+
+              {/* {boxPositions.map((position, index) => (
                 <Box
                   key={index} // 必须提供唯一key
                   isRotating={isRotating}
                   rotationSpeed={rotationSpeed}
                   {...position} // 展开位置属性 (x, y, z)
                 />
-              ))}
+              ))} */}
 
               {/* 创建地板 */}
-              <Plane/>
+
+              {/* <Plane /> */}
+
+              {/* 外部模型 */}
+
+              <GltfGenerator />
 
               {/* 轨道控制 */}
               <OrbitControls
@@ -215,7 +139,6 @@ function Loading() {
       center
       style={{
         display: "flex",
-        alignItems: "center",
         justifyContent: "center",
         width: "200px",
       }}

@@ -1,0 +1,48 @@
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  margin-left: 20px;
+  margin-right: 20px
+}
+
+.nav-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.image-container {
+  position: relative;
+  overflow: hidden;
+  height: 300px;
+}
+
+.image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.nav-card:hover img {
+  transform: scale(1.05);
+}
+
+.nav-title {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  margin: 0;
+}

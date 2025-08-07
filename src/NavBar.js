@@ -1,5 +1,4 @@
 import "./css/NavBar.css";
-import logo from "./picture/logo.png";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
@@ -16,7 +15,7 @@ function NavBar() {
     <header className="navbar-container">
       <nav className="navbar">
         <div className="nav-logo">
-          <img src={logo} alt="logo" />
+          <img src={"/picture/logo.png"} alt="logo" />
           <span>非遗数字博物馆</span>
         </div>
         
@@ -37,14 +36,6 @@ function NavBar() {
               className={location.pathname === "/" ? "active" : ""}
             >
               <i className="fas fa-home"></i> 首页
-            </Link>
-          </li>
-          <li>
-            <Link 
-              to="/test_scene" 
-              className={location.pathname === "/test_scene" ? "active" : ""}
-            >
-              <i className="fas fa-cube"></i> 场景测试
             </Link>
           </li>
           <li>
