@@ -1,3 +1,5 @@
+import "../css/ui.css";
+
 // GUI控制面板组件
 function ControlPanel({
   isRotating,
@@ -37,4 +39,17 @@ function ControlPanel({
     </div>
   );
 }
-export { ControlPanel };
+
+function FullscreenButton({ isFullscreen, toggleFullscreen }) {
+  return (
+    <button className="fullscreen-button" onClick={toggleFullscreen}>
+      {isFullscreen ? (
+        <span className="icon">↩</span>
+      ) : (
+        <span className="icon">⛶</span>
+      )}
+    </button>
+  );
+}
+
+export { ControlPanel, FullscreenButton };

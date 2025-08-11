@@ -48,7 +48,6 @@ function Home() {
 
   return (
     <>
-      <h1>this is home.</h1>
       <div className="nav-grid">
         {navItems.map((item, index) => (
           <Link key={index} to={item.path} className="nav-card">

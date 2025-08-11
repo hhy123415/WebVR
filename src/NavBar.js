@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  
+
   // 当路由变化时关闭移动菜单
   useEffect(() => {
     setIsMenuOpen(false);
@@ -15,43 +15,40 @@ function NavBar() {
     <header className="navbar-container">
       <nav className="navbar">
         <div className="nav-logo">
-          <img src={"/picture/logo.png"} alt="logo" />
+          <img src={"/picture/logo.jpg"} alt="logo" />
           <span>非遗数字博物馆</span>
         </div>
-        
+
         {/* 移动端菜单按钮 */}
-        <div 
-          className={`menu-toggle ${isMenuOpen ? 'open' : ''}`} 
+        <div
+          className={`menu-toggle ${isMenuOpen ? "open" : ""}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <span></span>
           <span></span>
           <span></span>
         </div>
-        
-        <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
+
+        <ul className={`nav-links ${isMenuOpen ? "open" : ""}`}>
           <li>
-            <Link 
-              to="/" 
-              className={location.pathname === "/" ? "active" : ""}
-            >
-              <i className="fas fa-home"></i> 首页
+            <Link to="/" className={location.pathname === "/" ? "active" : ""}>
+              首页
             </Link>
           </li>
           <li>
-            <Link 
-              to="/about" 
+            <Link
+              to="/about"
               className={location.pathname === "/about" ? "active" : ""}
             >
-              <i className="fas fa-info-circle"></i> 关于
+              关于
             </Link>
           </li>
           <li>
-            <Link 
-              to="/quiz" 
+            <Link
+              to="/quiz"
               className={location.pathname === "/quiz" ? "active" : ""}
             >
-              <i className="fas fa-question-circle"></i> 自我测验
+              自我测验
             </Link>
           </li>
         </ul>

@@ -51,8 +51,16 @@ function Plane() {
   );
 }
 
-function GltfGenerator() {
+function GltfGenerator({isRotating,rotationSpeed}) {
   const gltf = useGLTF("/model/ecy.glb");
+  const meshRef = useRef();
+
+  // 旋转动画
+  useFrame(() => {
+    if (meshRef.current && isRotating) {
+      meshRef.current.rotation.y += rotationSpeed;
+    }
+  });
 
   // 遍历模型中的所有材质并调整属性
   gltf.scene.traverse((child) => {
@@ -65,7 +73,12 @@ function GltfGenerator() {
   });
 
   return (
-    <primitive object={gltf.scene} scale={100} position={[-100, -50, 0]} />
+    <primitive
+      ref={meshRef}
+      object={gltf.scene}
+      scale={100}
+      position={[0, 0, 0]}
+    />
   );
 }
 
