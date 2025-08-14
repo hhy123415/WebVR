@@ -1,7 +1,7 @@
 import { useFrame, useLoader } from "@react-three/fiber";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import * as THREE from "three";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, useFBX } from "@react-three/drei";
 
 /**
  * 创建立方体模型
@@ -51,8 +51,61 @@ function Plane() {
   );
 }
 
-function GltfGenerator({isRotating,rotationSpeed}) {
-  const gltf = useGLTF("/model/ecy.glb");
+function GltfGenerator({
+  modelPath,
+  isRotating,
+  rotationSpeed,
+  scale = 100,
+  position = [0, 0, 0],
+  metalness = 0.2,
+  roughness = 0.8,
+}) {
+  // 动态加载传入路径的模型
+  const originalScene = useGLTF(modelPath).scene;
+  const meshRef = useRef();
+
+  useFrame(() => {
+    if (meshRef.current && isRotating) {
+      meshRef.current.rotation.y += rotationSpeed;
+    }
+  });
+
+  useEffect(() => {
+    originalScene.traverse((child) => {
+      if (child.isMesh) {
+        const material = child.material;
+        // 克隆材质以确保实例间独立
+        if (material && !material.isCloned) {
+          child.material = material.clone();
+          child.material.isCloned = true;
+        }
+        child.material.metalness = metalness;
+        child.material.roughness = roughness;
+      }
+    });
+  }, [originalScene, metalness, roughness]);
+
+  return (
+    <primitive
+      ref={meshRef}
+      object={originalScene}
+      scale={scale}
+      position={position}
+    />
+  );
+}
+
+function FbxGenerator({
+  modelPath,
+  isRotating,
+  rotationSpeed,
+  scale = 1,
+  position = [0, 0, 0],
+  metalness = 0.2,
+  roughness = 0.8,
+}) {
+  // 使用 useFBX 钩子加载 FBX 模型
+  const fbx = useFBX(modelPath);
   const meshRef = useRef();
 
   // 旋转动画
@@ -62,24 +115,20 @@ function GltfGenerator({isRotating,rotationSpeed}) {
     }
   });
 
-  // 遍历模型中的所有材质并调整属性
-  gltf.scene.traverse((child) => {
-    if (child.isMesh) {
-      const material = child.material;
-
-      material.metalness = 0.2;
-      material.roughness = 0.8;
-    }
-  });
+  // 使用useEffect确保只在模型加载后修改一次材质
+  useEffect(() => {
+    fbx.traverse((child) => {
+      if (child.isMesh) {
+        const material = child.material;
+        material.metalness = metalness;
+        material.roughness = roughness;
+      }
+    });
+  }, [fbx, metalness, roughness]);
 
   return (
-    <primitive
-      ref={meshRef}
-      object={gltf.scene}
-      scale={100}
-      position={[0, 0, 0]}
-    />
+    <primitive ref={meshRef} object={fbx} scale={scale} position={position} />
   );
 }
 
-export { Box, Plane, GltfGenerator };
+export { Box, Plane, GltfGenerator, FbxGenerator };

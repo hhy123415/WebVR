@@ -1,5 +1,5 @@
 import "./css/test.css";
-import { GltfGenerator } from "./utils/geometry";
+import { GltfGenerator, FbxGenerator } from "./utils/geometry";
 import { ControlPanel, FullscreenButton } from "./utils/ui";
 import { Loading } from "./utils/load";
 import { Canvas } from "@react-three/fiber";
@@ -22,7 +22,7 @@ function Test() {
   const [isRotating, setIsRotating] = useState(true);
   const [rotationSpeed, setRotationSpeed] = useState(0.01);
 
-  // 创建相机（只创建一次）
+  // 创建相机
   const camera = useRef(
     new THREE.PerspectiveCamera(
       75,
@@ -67,9 +67,22 @@ function Test() {
             <CameraUpdater />
             <ambientLight intensity={1} />
             <GltfGenerator
+              modelPath="/model/ecy.glb"
               isRotating={isRotating}
               rotationSpeed={rotationSpeed}
             />
+            <GltfGenerator
+              modelPath="/model/ecy1.glb"
+              isRotating={isRotating}
+              rotationSpeed={rotationSpeed}
+              position={[200,0,0]}
+            />
+            {/* <FbxGenerator
+              modelPath={"/model/ecy.fbx"}
+              isRotating={isRotating}
+              rotationSpeed={rotationSpeed}
+              position={[300,0,0]}
+            /> */}
             <OrbitControls
               target={[0, 0, 0]}
               enablePan={true}
