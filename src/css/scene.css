@@ -1,0 +1,97 @@
+.scene-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+  color: white;
+}
+
+.scene-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.scene-container h2 {
+  margin-top: 10px;
+}
+
+.scene-container p a{
+  color:white;
+}
+
+.canvas-container {
+  position: relative;
+  height: 80vh;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  background: #2c3e50;
+}
+
+/* 音频控制样式 */
+.audio-control-container {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.audio-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.audio-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.volume-slider {
+  width: 80px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  outline: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  border: none;
+}

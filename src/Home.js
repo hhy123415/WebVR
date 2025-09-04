@@ -5,9 +5,9 @@ function Home() {
   // 页面跳转数据
   const navItems = [
     {
-      title: "场景测试",
-      path: "/test_scene",
-      imageUrl: "/picture/test.png",
+      title: "腾蛟五香干制作技艺",
+      path: "/WuXiang",
+      imageUrl: "/picture/WuXiang.jpg",
     },
     {
       title: "场景测试",

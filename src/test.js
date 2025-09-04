@@ -1,4 +1,4 @@
-import "./css/test.css";
+import "./css/scene.css";
 import { GltfGenerator, FbxGenerator } from "./utils/geometry";
 import { ControlPanel, FullscreenButton } from "./utils/ui";
 import { Loading } from "./utils/load";
@@ -66,16 +66,20 @@ function Test() {
           <Suspense fallback={<Loading />}>
             <CameraUpdater />
             <ambientLight intensity={1} />
+            <directionalLight />
             <GltfGenerator
-              modelPath="/model/ecy.glb"
+              modelPath="/model/icecream.glb"
               isRotating={isRotating}
               rotationSpeed={rotationSpeed}
+              metalness={0}
+              roughness={0}
             />
             <GltfGenerator
               modelPath="/model/ecy1.glb"
               isRotating={isRotating}
               rotationSpeed={rotationSpeed}
               position={[200,0,0]}
+              playAnimation={false}
             />
             {/* <FbxGenerator
               modelPath={"/model/ecy.fbx"}

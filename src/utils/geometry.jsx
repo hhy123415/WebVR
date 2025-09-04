@@ -1,7 +1,7 @@
 import { useFrame, useLoader } from "@react-three/fiber";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
-import { useGLTF, useFBX } from "@react-three/drei";
+import { useGLTF, useFBX, useAnimations } from "@react-three/drei";
 
 /**
  * 创建立方体模型
@@ -51,6 +51,7 @@ function Plane() {
   );
 }
 
+// 模型加载和动画组件
 function GltfGenerator({
   modelPath,
   isRotating,
@@ -59,39 +60,48 @@ function GltfGenerator({
   position = [0, 0, 0],
   metalness = 0.2,
   roughness = 0.8,
+  playAnimation = true,
 }) {
-  // 动态加载传入路径的模型
-  const originalScene = useGLTF(modelPath).scene;
   const meshRef = useRef();
+  const groupRef = useRef();
+  const { scene, animations } = useGLTF(modelPath);
+  const { actions } = useAnimations(animations, groupRef);
 
+  // 处理模型旋转
   useFrame(() => {
     if (meshRef.current && isRotating) {
       meshRef.current.rotation.y += rotationSpeed;
     }
   });
 
+  // 更新材质属性
   useEffect(() => {
-    originalScene.traverse((child) => {
+    scene.traverse((child) => {
       if (child.isMesh) {
-        const material = child.material;
-        // 克隆材质以确保实例间独立
-        if (material && !material.isCloned) {
-          child.material = material.clone();
-          child.material.isCloned = true;
-        }
         child.material.metalness = metalness;
         child.material.roughness = roughness;
       }
     });
-  }, [originalScene, metalness, roughness]);
+  }, [scene, metalness, roughness]);
+
+  // 处理动画播放
+  useEffect(() => {
+    if (playAnimation && animations && animations.length > 0) {
+      animations.forEach((animation) => {
+        actions[animation.name].play();
+      });
+    }
+  }, [playAnimation, actions, animations]);
 
   return (
-    <primitive
-      ref={meshRef}
-      object={originalScene}
-      scale={scale}
-      position={position}
-    />
+    <group ref={groupRef}>
+      <primitive
+        ref={meshRef}
+        object={scene}
+        scale={scale}
+        position={position}
+      />
+    </group>
   );
 }
 
