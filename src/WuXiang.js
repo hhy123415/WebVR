@@ -1,11 +1,11 @@
 import "./css/scene.css";
+import * as THREE from "three";
+import { Suspense, useRef, useEffect, useState } from "react";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
 import { GltfGenerator } from "./utils/geometry";
 import { ControlPanel, FullscreenButton } from "./utils/ui";
 import { Loading } from "./utils/load";
-import { Canvas } from "@react-three/fiber";
-import { Suspense, useRef, useEffect, useState } from "react";
-import * as THREE from "three";
-import { OrbitControls } from "@react-three/drei";
 import { CameraUpdater } from "./utils/cameraUpdater";
 import { useFullscreen } from "./utils/useFullScreen";
 import { useWindowSize } from "./utils/useWindowSize";
@@ -15,13 +15,13 @@ const AudioPlayer = ({ isPlaying, onToggle, volume, onVolumeChange }) => {
   return (
     <div className="audio-control">
       <button onClick={onToggle} className="audio-toggle">
-        {isPlaying ? '🔊' : '🔇'}
+        {isPlaying ? "🔊" : "🔇"}
       </button>
       <input
         type="range"
         min="0"
         max="1"
-        step="0.1"
+        step="0.01"
         value={volume}
         onChange={onVolumeChange}
         className="volume-slider"
@@ -41,7 +41,7 @@ function WuXiang() {
   // 旋转控制状态
   const [isRotating, setIsRotating] = useState(true);
   const [rotationSpeed, setRotationSpeed] = useState(0.01);
-  
+
   // 新增音频状态
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [musicVolume, setMusicVolume] = useState(0.5);
@@ -67,13 +67,7 @@ function WuXiang() {
       if (isMusicPlaying) {
         audioRef.current.pause();
       } else {
-        // 处理自动播放限制
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            console.log("自动播放被阻止:", error);
-          });
-        }
+        audioRef.current.play();
       }
       setIsMusicPlaying(!isMusicPlaying);
     }
@@ -91,7 +85,7 @@ function WuXiang() {
   // 修复ESLint警告：在effect内部捕获audioRef.current的值
   useEffect(() => {
     const audioElement = audioRef.current;
-    
+
     return () => {
       if (audioElement) {
         audioElement.pause();
@@ -101,16 +95,10 @@ function WuXiang() {
 
   return (
     <div className={`scene-container`}>
-      {/* 添加音频元素 - 隐藏但可控制 */}
-      <audio 
-        ref={audioRef}
-        loop
-        volume={musicVolume}
-        preload="auto"
-      >
+      <audio ref={audioRef} volume={musicVolume} preload="auto">
         <source src="/voice/五香干.mp3" type="audio/mpeg" />
       </audio>
-      
+
       {!isFullscreen && (
         <header>
           <h1>腾蛟五香干制作技艺</h1>
@@ -137,10 +125,10 @@ function WuXiang() {
           isFullscreen={isFullscreen}
           toggleFullscreen={toggleFullscreen}
         />
-        
+
         {/* 新增音频控制按钮 */}
         <div className="audio-control-container">
-          <AudioPlayer 
+          <AudioPlayer
             isPlaying={isMusicPlaying}
             onToggle={toggleMusic}
             volume={musicVolume}
